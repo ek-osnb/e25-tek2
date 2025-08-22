@@ -138,7 +138,7 @@ Everybody can see the **public key** (like a lock), but only the owner has the *
 ---
 
 <!-- _class: lead -->
-# [Exercise: Generate SSH keys](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/01-generate-ssh-keys.md)
+# [Exercise: Generate SSH keys](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/01-generate-ssh-key.md)
 
 ---
 
