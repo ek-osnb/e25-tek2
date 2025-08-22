@@ -324,5 +324,3 @@ docker run -v /path/on/host:/path/in/container <image-name>
 - **`docker stop <container-id>`**: Stops a running container.
 - **`docker rm <container-id>`**: Removes a stopped container.
 - **`docker rmi <image-name>`**: Removes a Docker image.
-
----
