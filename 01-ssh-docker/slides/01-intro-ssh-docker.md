@@ -209,7 +209,7 @@ img {
 ---
 
 <!-- _class: lead -->
-# [Exercise: Docker install](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/01-docker-install.md)
+# [Exercise: Docker install](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/02-docker-install.md)
 
 ---
 
