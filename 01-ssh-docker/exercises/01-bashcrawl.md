@@ -71,3 +71,6 @@ docker run -it bashcrawl:latest
 - If we omit `:latest`, Docker will use the `latest` tag by default.
 
 This command will start a new container from the `bashcrawl` image and open an interactive terminal session inside the container.
+
+## Step 6: Play Bashcrawl
+Once inside the container, you can start playing the bashcrawl.
