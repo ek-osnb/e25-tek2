@@ -137,8 +137,9 @@ Everybody can see the **public key** (like a lock), but only the owner has the *
 
 ---
 
-<!-- _class: lead -->
-# [Exercise: Generate SSH keys](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/01-generate-ssh-key.md)
+# Exercises (00-01):
+- [Exercise 00: Git config](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/00-git-config.md)
+- [Exercise 01: Generate SSH keys](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/01-generate-ssh-key.md)
 
 ---
 
@@ -208,8 +209,48 @@ img {
 
 ---
 
-<!-- _class: lead -->
-# [Exercise: Docker install](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/02-docker-install.md)
+# Exercises (02-04):
+-  [Exercise 02: Docker install](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/02-docker-install.md)
+-  [Exercise 03: Running a container](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/03-docker-running-images.md)
+- [Exercise 04: Cleaning up](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/04-docker-cleanup.md)
+
+---
+
+# Networking: Port mapping
+
+**Port mapping** allows you to expose a port on the host machine to a port in the Docker container.
+
+This is useful for accessing services running inside the container, such as web servers or databases.
+
+To map a port, use the `-p` option when running a container.
+```bash
+docker run -p <host-port>:<container-port> <image-name>
+```
+**Example:**
+```bash
+docker run -p 8080:80 nginx
+```
+
+---
+
+# Bind mounts
+
+**Bind mounts** allow you to mount a directory from your host machine into a Docker container.
+
+This is useful for development, as it allows you to edit files on your host machine and see the changes reflected in the container immediately.
+
+To use a bind mount, you can use the `-v` option when running a container.
+
+```bash
+docker run -v /path/on/host:/path/in/container <image-name>
+```
+
+---
+
+# Exercises (05-07):
+-  [Exercise 05: Docker port mapping](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/05-docker-ports.md)
+-  [Exercise 06: Docker exec](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/06-docker-exec.md)
+-  [Exercise 07: Docker bind mounts](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/07-docker-bind-mounts.md)
 
 ---
 
@@ -272,44 +313,10 @@ docker run -it my-ubuntu-image
 
 ---
 
-<!-- _class: lead -->
-# [Exercise: Dockerize a maven project](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/03-docker-maven.md)
+# Exercises (08)
 
----
+- [Exercise 08: Dockerize a maven project](https://github.com/ek-osnb/e25-tek2/blob/main/01-ssh-docker/guides/08-dockerfile-maven.md)
 
-# Networking: Port mapping
-
-**Port mapping** allows you to expose a port on the host machine to a port in the Docker container.
-
-This is useful for accessing services running inside the container, such as web servers or databases.
-
-To map a port, use the `-p` option when running a container.
-```bash
-docker run -p <host-port>:<container-port> <image-name>
-```
-**Example:**
-```bash
-docker run -p 8080:80 nginx
-```
-
----
-
-# Bind mounts
-
-**Bind mounts** allow you to mount a directory from your host machine into a Docker container.
-
-This is useful for development, as it allows you to edit files on your host machine and see the changes reflected in the container immediately.
-
-To use a bind mount, you can use the `-v` option when running a container.
-
-```bash
-docker run -v /path/on/host:/path/in/container <image-name>
-```
-
----
-
-<!-- _class: lead -->
-# [Exercise: Docker bind mount](https://github.com/ek-osnb/e25-tek2/tree/main/01-ssh-docker/guides/04-docker-ports-bind-mount.md)
 
 ---
 
