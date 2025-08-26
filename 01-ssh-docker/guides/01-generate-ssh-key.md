@@ -49,8 +49,20 @@ This guide will help you generate a SSH key pair and use it with your GitHub acc
     ```
 
 3. If you see a warning about the authenticity of the host, type `yes` to continue.
+
 <!-- 4. If you encounter any issues, ensure that your SSH agent is running and your key is added:
     ```bash
     eval "$(ssh-agent -s)"  # Start the SSH agent and set the environment variable
     ssh-add ~/.ssh/id_ed25519  # Add your SSH key to the agent
     ``` -->
+
+## Step 4: Cloning a Repository using SSH
+
+Now that you have your SSH key set up, you can clone repositories using SSH:
+
+```bash
+git clone git@github.com:username/repo.git
+```
+
+- replace the `username` with your GitHub username and `repo.git` with the repository you want to clone.
+
