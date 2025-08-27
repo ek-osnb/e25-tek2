@@ -17,11 +17,11 @@ mkdir -p tek2/nginx-example
 ```
 This will create the directory `tek2/nginx-example` on your host machine.
 
-Navigate to the `tek2/nginx-example` directory:
+<!-- Navigate to the `tek2/nginx-example` directory:
 
 ```bash
 cd tek2/nginx-example
-```
+``` -->
 
 ### Step 2: Creating a bind mount
 
