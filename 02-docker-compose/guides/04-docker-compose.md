@@ -7,13 +7,9 @@ Up until now we had to manually create and manage each container individually. W
 In this exercise we will create a `docker-compose.yml` file to define a database, and a web application that connects to it.
 
 ## YAML syntax
-YAML is a human-readable data serialization format. It is commonly used for configuration files and data exchange between languages with different data structures. In a `docker-compose.yml` file, you define your application's services, networks, and volumes using YAML syntax.
+YAML (YAML Ain't Markup Language) is a human-readable data serialization format. It is commonly used for configuration files and data exchange between languages with different data structures. In a `docker-compose.yml` file, you define your application's services, networks, and volumes using YAML syntax.
 
 YAML uses indentation to represent the structure of the data. Each level of indentation represents a new level in the hierarchy. For example, in the `docker-compose.yml` file, the services are defined at the top level, and each service has its own set of properties indented beneath it.
-
-## Goal:
-
-The goal of this exercise is to create a Docker Compose file that defines a MySQL database service, and using volumes to persist data beyond the container's lifecycle.
 
 ## Step 1: Create a docker-compose.yml file
 Create a new file named `docker-compose.yml` in the root of your project directory.
@@ -42,12 +38,12 @@ docker run -d --name the_db -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DA
 
 ## Step 2: Starting container using docker compose
 
-To start the container defined in the `docker-compose.yml` file, you can use the following command:
+To start the containers defined in the `docker-compose.yml` file, you can use the following command:
 ```bash
 docker compose up -d
 ```
 
-This command will start the services (here only the MySQL db) defined in the `docker-compose.yml` file in **detached mode**.
+This command will start all the services defined in the `docker-compose.yml` file in **detached mode**.
 
 ## Step 3: Entering the container
 
@@ -173,7 +169,7 @@ This is because each time you stop the container, the data stored in the contain
 
 ## Step 7: Using volumes to persist data
 
-Fortunately, adding volume support in the `docker-compose.yml` file is straightforward. Replace the `db` service definition with the following:
+To add volume support in the `docker-compose.yml` file, replace the `db` service definition with the following:
 
 ```yaml
 services:
@@ -195,11 +191,11 @@ volumes:
     name: the_db_volume # Just for demo purpose
 ```
 
-`db_data` is a **named volume** that is used to persist the data stored in the MySQL database. In earlier exercises we have used bind mounts, to map a directory on the host to a directory in the container. Named volumes are managed by Docker and are stored in a part of the filesystem which is managed by Docker.
+`db_data` is a named volume that is used to persist the data stored in the MySQL database. In earlier exercises we have used bind mounts, to map a directory on the host to a directory in the container. Named volumes are managed by Docker and are stored in a part of the filesystem which is managed by Docker.
 
 ## Step 8: Verifying data persistence
 
-Start the service again using Docker Compose:
+Start the service using Docker Compose:
 
 ```bash
 docker compose up -d

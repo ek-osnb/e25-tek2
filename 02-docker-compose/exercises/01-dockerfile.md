@@ -17,15 +17,15 @@ The following are some of the most commonly used commands in a `Dockerfile`:
 - `CMD`: Specifies the command to run when the container starts (can be overwritten)
 - `ENTRYPOINT`: Similar to `CMD`, but sets the command that will always be run in the container.
 
-## Dockerizing a Spring application
+## Goal:
 
-In this exercise, we will create a `Dockerfile` for a Spring Boot REST API application.
+The goal in this exercise, is to create a Dockerfile for a Spring Boot application.
 
 ## Step 1: Create a Dockerfile
 
-In an empty directory, create a new file named `Dockerfile` (with no file extension).
+Inside the root directory of the project, create a new file named `Dockerfile` (with no file extension).
 
-First we need to use a **base image**, we will use the [maven](https://hub.docker.com/layers/library/maven/3.9.11-eclipse-temurin-21/images/sha256-3e8012d0a4a48f366dc8cfade527db0c2491e5cf24484bc644801d87e5234ac3) base image:
+First we need to use a **base image**, we will use the [maven](https://hub.docker.com/layers/library/maven/3.9.11-eclipse-temurin-21/images/sha256-3e8012d0a4a48f366dc8cfade527db0c2491e5cf24484bc644801d87e5234ac3) base image. Add the following line to the `Dockerfile`:
 
 ```dockerfile
 FROM maven:3.9.11-eclipse-temurin-21

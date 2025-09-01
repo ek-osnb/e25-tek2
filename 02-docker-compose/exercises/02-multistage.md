@@ -4,6 +4,10 @@ In the previous exercise, we created a `Dockerfile` for a Spring Boot applicatio
 
 We will reuse the existing `Dockerfile` and modify it to use multi-stage builds. The goal of multi-stage builds is to reduce the size of the final Docker image by separating the build environment from the runtime environment.
 
+# Goal:
+
+The goal in this exercise, is to create a multi-stage Dockerfile for a Spring Boot application, to reduce the final image size.
+
 ## Step 1: Check image size
 
 Before we start, let's check the size of the existing Docker image:
@@ -21,7 +25,7 @@ spring-api   latest    35556a893585   2 minutes ago   1.23GB
 Notice that the image size is **1.23GB**.
 
 ## Step 2: Multi-stage
-We will split the build process into multiple stages, to reduce the final image size.
+We will split the build process into two stages (a build stage and a runtime stage), to reduce the final image size.
 
 ```dockerfile
 # Build stage
@@ -41,6 +45,8 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 The build stage is explained in the previous exercise. The Runtime stage uses a smaller base image (JRE Alpine). It copies the JAR file from the build stage, and rename it to `app.jar`.
 
 Then we set the `ENTRYPOINT` for the container.
+
+Only the final stage will be included in the final image (i.e. the runtime stage).
 
 ## Step 3: Build the image
 Now that we have our multi-stage Dockerfile, we can build the Docker image.
