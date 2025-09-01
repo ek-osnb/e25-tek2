@@ -178,7 +178,6 @@ Fortunately, adding volume support in the `docker-compose.yml` file is straightf
 ```yaml
 services:
   db:
-    container_name: the_db
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root

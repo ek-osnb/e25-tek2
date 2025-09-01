@@ -25,7 +25,6 @@ Now that we have our environment variables defined in the `.env` file, we can re
 ```yaml
 services:
   db:
-    container_name: db
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -42,7 +41,6 @@ services:
       retries: 5
 
   app:
-    container_name: backend
     build:
       context: .
       dockerfile: Dockerfile
@@ -79,7 +77,7 @@ docker ps -a
 To check that the environment variables are correctly set inside the running container, you can use the following command to enter the container:
 
 ```bash
-docker exec -it backend sh
+docker exec -it <app_container_id> sh
 ```
 Once inside the container, you can use the `printenv` command to display all environment variables:
 
@@ -93,7 +91,7 @@ Verify that the environment variables are the same as those defined in the `.env
 Notice that we could also pass the `printenv` command directly to `docker exec` without entering the container:
 
 ```bash
-docker exec backend printenv
+docker exec <app_container_id> printenv
 ```
 ---
 

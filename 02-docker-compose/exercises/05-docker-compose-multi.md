@@ -16,7 +16,6 @@ We will reuse the `docker-compose.yml` file from the previous exercise and add a
 ```yaml
 services:
   db:
-    container_name: db
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -29,7 +28,6 @@ services:
       - db_data:/var/lib/mysql
 
   app:
-    container_name: backend
     build:
       context: .
       dockerfile: Dockerfile
@@ -61,7 +59,7 @@ docker ps -a
 You will notice that the Spring Boot application has exited with an error. To inspect the logs, use the following command:
 
 ```bash
-docker logs backend
+docker logs <app_container_id>
 ```
 
 Going through the logs, you will notice the following exception:
@@ -110,7 +108,6 @@ To make sure that the database is ready before the Spring Boot application start
 ```yaml
 services:
   db:
-    container_name: db
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -127,7 +124,6 @@ services:
       retries: 5
 
   app:
-    container_name: backend
     build:
       context: .
       dockerfile: Dockerfile
