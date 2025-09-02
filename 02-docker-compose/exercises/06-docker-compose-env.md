@@ -15,6 +15,7 @@ MYSQL_PASSWORD=secret
 SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/mydb
 SPRING_DATASOURCE_USERNAME=user
 SPRING_DATASOURCE_PASSWORD=secret
+SPRING_JPA_HIBERNATE_DDL_AUTO=update
 ```
 Make sure to add the `.env` file to your `.gitignore` file to prevent it from being committed to version control, as it contains sensitive information.
 
@@ -48,6 +49,7 @@ services:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     ports:
       - "8080:8080"
     depends_on:
