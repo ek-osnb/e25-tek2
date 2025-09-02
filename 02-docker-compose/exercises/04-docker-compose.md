@@ -40,6 +40,8 @@ Previously we would have run the following command to start the MySQL container:
 docker run -d --name the_db -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=mydb -e MYSQL_USER=user -e MYSQL_PASSWORD=secret mysql:8.0
 ```
 
+From a YAML point of view, the items under environment are key-value pairs that define the environment variables for the container (think of it like a map or dictionary). Under `ports`, we use `-` to define a **list** of port mappings.
+
 ## Step 2: Starting container using docker compose
 
 To start the container defined in the `docker-compose.yml` file, you can use the following command:
