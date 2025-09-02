@@ -81,7 +81,7 @@ docker compose up -d app
 Check the logs again:
 
 ```bash
-docker logs backend
+docker logs <app_container_id>
 ```
 
 You should see something similar to this:
