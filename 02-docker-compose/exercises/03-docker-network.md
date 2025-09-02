@@ -85,7 +85,7 @@ To connect the Spring application to the MySQL database, we need to set the appr
 Even though we already have the environment variables, set in the `application.properties` file, we can override them by setting new values when running the container. To do this, use the following command
 
 ```bash
-docker run -d -p 8080:8080 --network my-network -e SPRING_DATASOURCE_URL=jdbc:mysql://my_mysql:3306/mydb -e SPRING_DATASOURCE_USERNAME=user -e SPRING_DATASOURCE_PASSWORD=secret -e spring-api
+docker run -d -p 8080:8080 --network my-network -e SPRING_DATASOURCE_URL=jdbc:mysql://my_mysql:3306/mydb -e SPRING_DATASOURCE_USERNAME=user -e SPRING_DATASOURCE_PASSWORD=secret spring-api
 ```
 
 Now the application will run and connect to the MySQL database using the specified environment variables.
