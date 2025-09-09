@@ -51,7 +51,7 @@ This YAML file defines a GitHub Action that triggers on every push to the reposi
 ## Step 3: Commit and Push
 For the action to take effect, you need to commit and push the changes to your repository. You can do this using the following commands:
 ```bash
-git add .github/workflows/hello-world.yml
+git add .
 git commit -m "Add Hello World GitHub Action"
 git push
 ```
