@@ -36,24 +36,25 @@ name: Docker CI reusable
 on:
 	workflow_call:
 
-build:
-	runs-on: ubuntu-latest
-	steps:
-		- name: Checkout code
-			uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-		- name: Test container
-			run: |
-				# Run the container in detached mode
-				docker compose up -d
-				
-				# Wait for a few seconds to ensure the container is up and running
-				sleep 40
+jobs:
+	build:
+		runs-on: ubuntu-latest
+		steps:
+			- name: Checkout code
+				uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+			- name: Test container
+				run: |
+					# Run the container in detached mode
+					docker compose up -d
+					
+					# Wait for a few seconds to ensure the container is up and running
+					sleep 40
 
-				# Test the application endpoint
-				curl -f http://localhost:8080/actuator/health || exit 1
+					# Test the application endpoint
+					curl -f http://localhost:8080/actuator/health || exit 1
 
-				# Stop and remove the container
-				docker compose down
+					# Stop and remove the container
+					docker compose down
 ```
 
 ## Step 2: Disable previous workflows
