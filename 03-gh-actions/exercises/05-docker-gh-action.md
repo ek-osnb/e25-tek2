@@ -50,7 +50,7 @@ We could also use `docker compose up -d` to start the container, but for simplic
 For the action to take effect, you need to commit and push the changes to your repository.
 You can do this using the following commands:
 ```bash
-git add .github/workflows/docker-ci.yml
+git add .
 git commit -m "Add Docker CI GitHub Action"
 git push
 ```

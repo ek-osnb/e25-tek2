@@ -37,7 +37,7 @@ Repeat the process for any other actions you are using in your workflow. For exa
 Once you have updated all the actions in your workflow file to use commit hashes, commit your changes and push them to your GitHub repository.
 You can do this using the following commands:
 ```bash
-git add .github/workflows/java-test.yml
+git add .
 git commit -m "Use hash pinning for GitHub Actions"
 git push
 ```

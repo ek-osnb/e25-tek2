@@ -55,7 +55,7 @@ When the action runs, it will first check if there is a cache available for the 
 For the action to take effect, you need to commit and push the changes to your repository.
 You can do this using the following commands:
 ```bash
-git add .github/workflows/java-test.yml
+git add .
 git commit -m "Add caching to Maven build GitHub Action"
 git push
 ```

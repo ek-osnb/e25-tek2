@@ -51,7 +51,7 @@ The `steps` section defines the individual steps of the job:
 ## Step 3: Commit and Push
 For the action to take effect, you need to commit and push the changes to your repository. You can do this using the following commands:
 ```bash
-git add .github/workflows/maven-build.yml
+git add .
 git commit -m "Add Maven build GitHub Action"
 git push
 ```
