@@ -49,7 +49,7 @@ section.lead h3 {
 - **Host name**: **`www.ek.dk`**
 A human-readable label that is assigned to a device connected to a network. Hostnames are easier to remember than IP addresses.
     - Domain: **`ek.dk`**
-    - Hostname: **`www`**
+    - Subdomain: **`www`**
     - Top-Level Domain (TLD): **`.dk`**
 
 - **IP Address**: **20.50.2.66**
@@ -75,7 +75,7 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 - Vastly larger address space (about `3.4 x 10^38` addresses).
 
 ---
-## Available IP Addresses
+## IP Address Space
 **IPv4**:
 - Approximately 4.3 billion addresses (2^32).
 - The range of IP addresses is from `0.0.0.0` to `255.255.255.255`.
@@ -107,7 +107,7 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 
 ---
 
-## Centralized server??
+## First approach: Centralized server
 
 - A single server that maintains a database of domain names and their corresponding IP addresses.
 - When a user wants to access a website, their computer queries this central server to get the IP address.
@@ -131,16 +131,19 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 - **Top-Level Domains (TLDs)**: Below the root, such as `.com`, `.org`, `.net`, and country-code TLDs like `.dk`, `.uk`, `.jp`.
 - **Authoritative Servers**: Each TLD has authoritative servers that manage the next level down, which includes second-level domains (e.g., `ek` in `ek.dk`).
 
+<!-- _class: img-60 -->
+
 ![dns hierarchy](assets/dns-hierarchy.png)
 
 <style>
-  img {
+  section.img-60 img {
     max-width: 60%;
     height: auto;
     display: block;
     margin: 0 auto;
   }
 </style>
+
 
 ---
 
@@ -155,11 +158,12 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 ## DNS Resolution Process
 
 - When you type a URL into your browser, your computer initiates a **DNS query** to resolve the domain name to an IP address.
+
 ![dns resolution](assets/dns-resolution.png)
 
 ---
 
-## What happens during DNS resolution?
+## The 8 steps in a DNS lookup
 1. Your computer asks a **recursive resolver** (usually provided by your ISP or a public DNS service like Google DNS or Cloudflare DNS) to resolve the domain name.
 2. The recursive resolver asks a **root nameserver** for the TLD (e.g., `.dk`).
 3. The root nameserver responds with the address of a **TLD nameserver** for `.dk`.
@@ -176,7 +180,17 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 - **Recursive query**: It puts the burden of resolution on the DNS server. The server will query other servers on behalf of the client until it finds the answer or an error.
 - **Iterative query**: The DNS server responds with the best answer it can provide based on its knowledge. If it doesn't know the answer, it will refer the client to another DNS server.
 
-**Question:** Which type of query does your computer typically use when resolving a domain name?
+**Question:** Identify which steps in the DNS resolution process are recursive and which are iterative.
+
+---
+
+## Recursive vs authoritative resolvers
+
+A **resolver** is a DNS client that initiates the DNS query process on behalf of the user.
+
+- A **recursive resolver** (or DNS resolver) is responsible for handling the entire DNS resolution process, querying multiple DNS servers as needed to obtain the final IP address.
+
+- An **authoritative resolver** (or authoritative nameserver) is a DNS server that holds the definitive records for a specific domain. It responds to queries about that domain with the actual IP addresses and other DNS records.
 
 ---
 
@@ -201,6 +215,23 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 
 ---
 
+**A Record example:**
+![A record](assets/a-record.png)
+
+**CNAME Record example:**
+![CNAME record](assets/cname-record.png)
+
+**AAAA Record example:**
+![AAAA record](assets/aaaa-record.png)
+
+**NS Record example:**
+![NS record](assets/ns-record.png)
+
+**MX Record example:**
+![MX record](assets/mx-record.png)
+
+---
+
 ## DNS lookup tools
 
 **MacOS/Linux:**
@@ -211,6 +242,24 @@ A unique string of numbers separated by periods (IPv4) that identifies each comp
 **Windows:**
 - `nslookup`
 - `dig` using a Docker container.
+
+---
+
+# `dig` command
+
+**MAC:**
+Use Homebrew (a package manager for macOS - can be installed from https://brew.sh/):
+```bash
+# Use homebrew to install bind (which includes dig):
+brew install bind
+```
+**Windows:**
+Use docker interactively:
+```bash
+docker run -it jonlabelle/network-tools bash
+# If you get an error: the input device is not a TTY, use:
+winpty docker run -it jonlabelle/network-tools bash
+```
 
 ---
 
@@ -296,26 +345,22 @@ ek.dk.			600	IN	A	20.50.2.66
 
 ---
 
+## `dig +trace` explanation
+
+When using `dig +trace`, you can see the entire resolution path from the root servers down to the authoritative server for the domain.
+
+- This is actually a *"hack"* because `dig` is performing the iterative queries on your behalf, simulating what a recursive resolver would do.
+
+---
+
 ## Exercise: DNS Lookup
 
 1. Use **`nslookup`** to find the IP address of `ek.dk`.
-2. Use **`dig`** to perform a DNS query for `ek.dk` and analyze the output.
+2. Use **`dig`** to perform a DNS query for `ek.dk` and try different query types (A, AAAA, MX, etc.).
 3. Use **`dig +trace ek.dk`** to see the full resolution path from the root servers down to the authoritative server.
     - Which servers were contacted?
     - Identify the root, TLD and authoritative servers.
     - Do it repeatedly what happens to the results?
-
----
-
-## What is a resolver?
-
-A **resolver** is a server that receives DNS queries from client devices (like your computer or smartphone) and is responsible for finding the corresponding IP address for a given domain name. There are two main types of resolvers:
-
-1. **Recursive Resolvers**: These resolvers take on the task of querying multiple DNS servers on behalf of the client until they find the authoritative answer. They cache the results to improve performance for future queries.
-
-2. **Iterative Resolvers**: These resolvers return the best answer they have (which may not be the final answer) and rely on the client to continue the query process. They typically provide referrals to other DNS servers that may have the answer.
-
-**Question:** How does your computer know which resolver to use?
 
 ---
 
@@ -336,7 +381,7 @@ A **resolver** is a server that receives DNS queries from client devices (like y
 
 ---
 
-# Example: Registering a domain and setting up DNS records
+# DEMO: Registering a domain and setting up DNS records
 - Register a domain through a registrar (simply.com, one.com, etc.).
 - Use the registrar's DNS management tools to add records:
     - Add an A record to point `yourdomain.com` to your server's IP address.
@@ -354,12 +399,23 @@ A **resolver** is a server that receives DNS queries from client devices (like y
 
 ---
 
-# Adding SSL to a nginx server
+# DNS propagation time
+
+- DNS changes can take time to propagate throughout the internet due to caching at various levels (local DNS resolver, ISP, etc.).
+- The time it takes for DNS changes to propagate can vary based on the TTL (Time To Live) settings of the DNS records.
+- Lower TTL values can lead to faster propagation but may increase the load on DNS servers.
+- It's common to wait anywhere from a few minutes to 48 hours for DNS changes to fully propagate.
+
+**See a visualization of DNS propagation at https://dnschecker.org/**
+
+---
+
+# Adding TLS to a nginx server
 
 When hosting a website, it's important to secure the connection using SSL/TLS. This ensures that data transmitted between the user's browser and the web server is **encrypted**.
 - Encryption protects the data from being intercepted by malicious actors.
 
-- SSL/TLS also provides **authentication**, ensuring that users are connecting to the legitimate website and not an imposter.
+- TLS also provides **authentication**, ensuring that users are connecting to the legitimate website and not an imposter.
 
 
 ---
@@ -371,19 +427,19 @@ When hosting a website, it's important to secure the connection using SSL/TLS. T
     sudo apt-get update
     sudo apt-get install certbot python3-certbot-nginx
     ```
-2. Obtain an SSL certificate for your domain:
+2. Obtain an TLS certificate for your domain:
     ```bash
     sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
     ```
 3. Follow the prompts to complete the certificate installation.
-4. Certbot will automatically configure Nginx to use the new SSL certificate.
+4. Certbot will automatically configure Nginx to use the new TLS certificate.
 
 **Replace `yourdomain.com` with your actual domain name.**
 
 
 ---
 
-# Exercise: Setting up SSL with Let's Encrypt
+# Exercise: Setting up TLS with Let's Encrypt
 
 ---
 
@@ -397,15 +453,106 @@ When hosting a website, it's important to secure the connection using SSL/TLS. T
 
 ---
 
-## HTTP: Hypertext Transfer Protocol
-- HTTP is the protocol used for transferring web pages on the internet.
-- It is an application-layer protocol that operates over TCP/IP (more on TCP/IP later).
-- HTTP defines how messages are formatted and transmitted, and how web servers and browsers should respond to various commands.
-- HTTP is **stateless**, meaning each request from a client to a server is independent and unrelated to previous requests.
-- HTTP (HTTP/1.0) is defined in **RFC 1945**.
+# DNS & HTTP
 
+Once the DNS resolution is complete and you have the IP address of the web server, your browser can establish a connection to the server using the **HTTP (Hypertext Transfer Protocol)** to request and receive web pages.
 
 ---
+
+![dns and http](assets/dns-full.png)
+
+---
+
+# HTTP
+
+HTTP is a text-based protocol used for communication between clients (like web browsers) and servers. It consists of **requests** sent by the client and **responses** sent by the server.
+
+HTTP defines how messages are formatted and transmitted, and how web servers and browsers should respond to various commands.
+
+HTTP is **stateless**, meaning each request from a client to a server is independent and unrelated to previous requests.
+
+---
+
+## Structure of an HTTP request
+
+```http
+GET /books HTTP/1.1
+Host: www.example.com
+User-Agent: curl/8.7.1
+Accept: application/json
+
+```
+
+---
+
+## Structure of an HTTP response
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 85
+
+{
+  "books": [
+    {"id": 1, "title": "1984", "author": "George Orwell"},
+    {"id": 2, "title": "To Kill a Mockingbird", "author": "Harper Lee"}
+    ]
+}
+```
+
+---
+
+## General HTTP structure
+
+```bash
++---------------------------------------+
+| Start Line (req) or Status Line (res) | <- Method, Path, Version or Version, Status Code
++---------------------------------------+
+| Headers                               | <- Key-Value pairs
++---------------------------------------+
+| Blank Line                            | <- CRLF to indicate end of headers
++---------------------------------------+
+| Body (optional)                       | <- Body content
++---------------------------------------+
+```
+
+**Question:**
+- How does it now how long the status line and headers are?
+- What separates the headers from the body?
+
+---
+## HTTP line endings
+
+- It uses the CRLF (Carriage Return Line Feed) sequence to indicate the end of each line, and a blank line (CRLF CRLF) to indicate the end of the headers section.
+- CR = Carriage Return (ASCII 13) or `\r` - `0x0D` in hex
+- LF = Line Feed (ASCII 10) or `\n` - `0x0A` in hex
+
+---
+
+## HTTP Line endings example
+
+```http
+GET /books HTTP/1.1\r\n
+Host: www.example.com\r\n
+User-Agent: curl/8.7.1\r\n
+Accept: application/json\r\n
+\r\n
+```
+
+---
+
+# HTTP Versions
+
+- HTTP/0.9 is an early version and is largely obsolete.
+- HTTP/1.0 (see [RFC 1945](https://tools.ietf.org/html/rfc1945)) - introduced the concept of headers and the ability to specify the type of content being sent.
+- HTTP/1.1 (see [RFC 7230](https://tools.ietf.org/html/rfc7230)) - improved performance and introduced persistent connections.
+- HTTP/2 (see [RFC 7540](https://tools.ietf.org/html/rfc7540)) - introduced multiplexing (= multiple requests in one connection) and header compression.
+- HTTP/3 (see [RFC 9114](https://tools.ietf.org/html/rfc9114)) - built on QUIC for improved performance.
+
+**We will focus on HTTP/1.1 for this course.**
+
+---
+
 ## HTTP methods
 - **GET**: Requests data from a specified resource. (e.g., loading a webpage)
 - **POST**: Submits data to be processed to a specified resource. (e.g., submitting a form)
@@ -420,7 +567,6 @@ When hosting a website, it's important to secure the connection using SSL/TLS. T
 - **1xx (Informational)**: Request received, continuing process.
 - **2xx (Success)**: The request was successfully received, understood, and accepted.
     - `200 OK`: The request has succeeded.
-
 - **3xx (Redirection)**: Further action needs to be taken to complete the request.
     - `301 Moved Permanently`: The resource has been moved to a new URL.
     - `302 Found`: The resource is temporarily located at a different URL.
@@ -446,27 +592,38 @@ When hosting a website, it's important to secure the connection using SSL/TLS. T
 
 ## HTTP format example
 
-```bash
-+-----------------------------------------------------+
-| GET /index.html HTTP/1.1                            |  <-- Request Line
-+-----------------------------------------------------+
-| Host: www.ek.dk                                     |  <-- Header
-| User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)|  <-- Header
-| Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8 |  <-- Header
-| Accept-Language: en-US,en;q=0.5                |  <-- Header
-| Accept-Encoding: gzip, def
-```
+<!-- _class: img-100 -->
+
+![alt text](assets/http-proto.png)
+
+<style>
+  section.img-100 img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+</style>
 
 ---
 
-## Intro to Wireshark
-- Wireshark is a network protocol analyzer that captures and displays network traffic in real-time.
-- It allows you to see the details of network packets, including headers and payloads.
-- Useful for troubleshooting network issues, analyzing protocols, and learning about network communication.
-- Supports filtering, searching, and exporting packet data.
-- Wireshark decomposes network traffic into its component protocols, and displays the details according to the OSI model (or TCP/IP model).
+# HTTPS
 
-**But what is the OSI model?**
+- HTTPS (Hypertext Transfer Protocol Secure) is the secure version of HTTP.
+- Builds on HTTP by adding a layer of encryption using SSL/TLS (Secure Sockets Layer / Transport Layer Security).
+- Ensures that data transmitted between the client and server is encrypted and secure from eavesdropping or tampering.
+- HTTPS uses port 443 by default, while HTTP uses port 80.
+
+---
+
+# OSI vs TCP/IP Model
+
+When learning about networking, two common models are used to describe how data is transmitted over a network: the **OSI (Open Systems Interconnection)** model and the **TCP/IP (Transmission Control Protocol/Internet Protocol)** model.
+
+- The OSI model has 7 layers, while the TCP/IP model has 4 layers.
+- The TCP/IP model is more practical and widely used in real-world networking.
+
+![OSI vs TCP](assets/OSI-vs-TCP.webp)
 
 ---
 
@@ -482,12 +639,19 @@ The OSI (Open Systems Interconnection) model is a conceptual framework used to u
 **7. Application Layer:** Interfaces with end-user applications (e.g., HTTP, FTP, DNS).
 
 ---
+# TCP/IP Model Overview
+The TCP/IP (Transmission Control Protocol/Internet Protocol) model is a simplified framework used to understand and implement network protocols in four layers.
+**1. Network Access Layer:** Combines the OSI's Physical and Data Link layers, dealing with the physical connection and data framing (e.g., Ethernet, Wi-Fi).
+**2. Internet Layer:** Corresponds to the OSI's Network layer, handling routing of data packets across networks (e.g., IP, ICMP).
+**3. Transport Layer:** Similar to the OSI's Transport layer, ensuring reliable data transfer between devices (e.g., TCP, UDP).
+**4. Application Layer:** Encompasses the OSI's Session, Presentation, and Application layers, interfacing with end-user applications (e.g., HTTP, DNS, FTP).
 
-## OSI vs TCP/IP Model
-- The OSI model has 7 layers, while the TCP/IP model has 4 layers.
-- The TCP/IP model is more practical and widely used in real-world networking.
+---
 
-![OSI vs TCP](assets/OSI-vs-TCP.webp)
+## How does DNS and HTTP fit into the models?
+
+- Both DNS and HTTP operate at the **Application Layer** of the OSI model (Layer 7) and the TCP/IP model (Layer 4).
+- They rely on lower layers (Transport, Internet, Network Access) to handle data transmission over the network.
 
 ---
 
@@ -504,8 +668,35 @@ The OSI (Open Systems Interconnection) model is a conceptual framework used to u
 ---
 
 ## DNS protocol format
+The DNS protocol uses two types of DNS messages, queries and responses; both have the same format. Each message consists of a header and four sections: question, answer, authority, and an additional space.
+
 
 ```bash
++---------------------+
+|        Header       | DNS message header
++---------------------+
+|       Question      | the question for the name server
++---------------------+
+|        Answer       | RRs answering the question
++---------------------+
+|      Authority      | RRs pointing toward an authority
++---------------------+
+|      Additional     | RRs holding additional information
++---------------------+
+```
+---
+
+## DNS Header Format
+
+The DNS header is 12 bytes long and contains several fields that provide information about the DNS message.
+
+<!-- _class: img-100 -->
+
+![alt text](assets/dns-header.png)
+
+
+
+<!-- ```bash
             +----------------------+----------------------+
             | Identification       | Flags                |
             +----------------------+----------------------+
@@ -521,7 +712,7 @@ The OSI (Open Systems Interconnection) model is a conceptual framework used to u
             +---------------------------------------------+
             | Additional                                  |
             +---------------------------------------------+
-```
+``` -->
 
 ---
 
@@ -565,6 +756,18 @@ Additional: | Name: <ROOT>, Type: OPT,                    |
 **Difficult to read, right? Let's use Wireshark instead!**
 
 ---
+
+## Intro to Wireshark
+- Wireshark is a network protocol analyzer that captures and displays network traffic in real-time.
+- It allows you to see the details of network packets, including headers and payloads.
+- Useful for troubleshooting network issues, analyzing protocols, and learning about network communication.
+- Supports filtering, searching, and exporting packet data.
+- Wireshark decomposes network traffic into its component protocols, and displays the details according to the OSI model (or TCP/IP model).
+
+**But what is the OSI model?**
+
+---
+
 ## Wireshark: Capturing DNS Traffic
 
 - Open Wireshark and start a capture on your network interface (e.g., Wi-Fi).
@@ -610,8 +813,15 @@ Wireshark can capture network traffic and display it in a human-readable format.
 
 ---
 
+# Difference between browser and curl HTTP requests
+- A web browser asks the server to **compress the content** (gzip, deflate) by using the `Accept-Encoding` header. This makes the response **smaller and faster** to download.
+- `curl` does not ask for compressed content by default, so the server sends the full uncompressed response.
+- Browsers also send additional headers like `User-Agent`, `Accept-Language`, and `Cookies` that `curl` does not include unless specified.
+
+---
+
 ## Exercises: Capture DNS traffic using Wireshark
-1. Start a Wireshark capture on your network interface.
+1. Start a Wireshark capture on your network interface (WiFi).
 2. Use a filter to display only DNS traffic: `dns`.
 3. Visit a website (e.g., `www.ek.dk`) in your web browser.
 4. Analyze the DNS query and response packets to identify the different fields and their values.
