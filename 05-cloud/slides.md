@@ -107,45 +107,36 @@ section.lead h3 {
 
 ---
 
-# CI/CD
+# CI/CD 
 
-**CI** = Continuous Integration
-- Developers merge their code changes into a shared repository frequently (multiple times a day).
+**CI/CD** stands for **Continuous Integration** and **Continuous Delivery**, and/or **Continuous Deployment**.
+
+**CI** = Continuous Integration (Build, test, and integrate automatically  )
+<!-- - Developers merge their code changes into a shared repository frequently (multiple times a day).
 - Automated tests are run to ensure that new changes do not break existing functionality.
-- CI helps catch issues early in the development process.
+- CI helps catch issues early in the development process. -->
 
-**CD** = Continuous Delivery
-- Continuous Delivery ensures that code changes are automatically prepared for a production release.
+**CD** = Continuous Delivery / Continuous Deployment (Deliver and deploy automatically)
+<!-- - Continuous Delivery: code changes are automatically prepared for a production release.
+- Continuous Deployment: automatically deploying every change that passes the automated tests to production. -->
 
 ---
 
-## Are we fully doing full CI/CD?
-
-<!-- **CI**
-- We run tests on every push to the repository.
-- We build our Docker images automatically as part of the CI process.
-- Code quality checks are also part of CI, but have not implemented this.
-
-**CD**
-- We do partial CD: We build and push Docker images to GHCR automatically.
-- We are missing automatic deployment to our VM's - **We will do this manually in this course.**
-
---- -->
+## Are we doing full CI/CD?
 
 ![CI/CD](assets/ci-cd.png)
 
 ---
 
-## Are we fully doing full CI/CD?
+## Are we doing full CI/CD?
 
 **CI**
 - We run tests on every push to the repository.
 - We build our Docker images automatically as part of the CI process.
-- Code quality checks are also part of CI, but have not implemented this.
 
 **CD**
-- We do partial CD: We build and push Docker images to GHCR automatically.
-- We are missing automatic deployment to our VM's (out of scope for this course).
+- We push images to GHCR automatically - which can be interpreted as doing Continuous Delivery - our images are ready to be deployed.
+- We are missing automatic deployment to our VM's (out of scope for this course) - i.e. we are not doing full Continuous Deployment.
 
 ---
 
@@ -198,8 +189,8 @@ sudo apt update
 # Upgrade installed packages
 sudo apt upgrade -y
 
-# Install nginx
-sudo apt install nginx -y
+# Install net-tools
+sudo apt install net-tools -y
 ```
 
 **Question:** Why do we run `apt update` before `apt upgrade`?
@@ -308,7 +299,7 @@ sudo ufw enable
 
 The following is a config file for Nginx as a reverse proxy:
 ```nginx
-# app.conf
+# /etc/nginx/sites-available/app.conf
 server {
     listen 80;
     server_name _; # catch all
@@ -349,6 +340,32 @@ server {
 # nginx reverse proxy with multiple services
 
 ![nginx reverse proxy with multiple services](assets/nginx-reverse-proxy-multiple.png)
+
+---
+
+# Nginx as a load balancer
+
+A load balancer distributes incoming network traffic across multiple backend servers to ensure no single server becomes overwhelmed, improving performance and reliability.
+
+```nginx
+upstream backend {
+    server SOME_IP_ADDRESS;
+    server SOME_OTHER_IP_ADDRESS;
+}
+server {
+    listen 80;
+    server_name _; # catch all or replace with domain
+
+    location / {
+        proxy_pass http://backend;
+        # Forward headers
+    }
+}
+```
+
+---
+
+![nginx load balancing](assets/nginx-lb.png)
 
 ---
 
