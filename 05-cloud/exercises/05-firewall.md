@@ -78,12 +78,11 @@ sudo ufw status
 
 It should show that UFW is inactive.
 
-Let's add rules to allow incoming traffic on port 3307 (MySQL) from `vm1`'s private IP address only, and port 22 (SSH) from anywhere:
+Let's add rules to allow incoming traffic on port 22 (SSH) from anywhere:
 
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow from <VM1_PRIVATE_IP_ADDRESS> to any port 3307 proto tcp
 sudo ufw allow 22/tcp
 ```
 The `proto` option specifies the protocol (TCP in this case - we will discuss tcp later in the course).
@@ -99,7 +98,13 @@ Confirm the changes by checking the status again:
 ```bash
 sudo ufw status
 ```
-You should see that port 22 is allowed from anywhere and port 3307 is allowed from `vm1`'s private IP address.
+**You should see that port `22` is allowed from anywhere. But nowhere is the MySQL port allowed. But `vm1` is still able to access it, since docker bypasses UFW rules by default - this can be changed but this is out of scope for this exercise.**
+
+### Caveats with UFW and Docker
+
+When using UFW on the host machine, Docker can bypass UFW rules. This means that even if UFW is configured to block certain ports, Docker containers may still be able to accept traffic on those ports. 
+
+Since we did portmapping on the private ip address of `vm2`, we still only restrict access to the MySQL server to all VMs in the same VPC as `vm1` and `vm2`.
 
 ### Test access to the MySQL server from your local machine
 
@@ -118,16 +123,16 @@ mysql -h <VM2_IP_ADDRESS> -u <YOUR_APP_USER> -p
 Replace `<VM2_IP_ADDRESS>` and `<YOUR_APP_USER>` with the appropriate values. You should not be able to connect, indicating that direct access to the MySQL server is blocked.
 
 
-## Step 3: Firewall settings on DigitalOcean
+## Step 3 (optional): Firewall settings on DigitalOcean
 
 While we have configured UFW on both VMs, DigitalOcean also provides its own firewall settings that can be managed through the DigitalOcean Control Panel. This firewall sits at the network edge and can provide an additional layer of security.
 
-On DigitalOceans firewall, we want the following rules:
+On DigitalOcean's firewall, we want the following rules:
 - `vm1`:
-    - Allow incoming traffic on port 22 (SSH) from anywhere (or restrict to your IP for better security)
+    - Allow incoming traffic on port 22 (SSH) from anywhere (or restrict to your Public IP Address for better security)
     - Allow incoming traffic on port 80 (HTTP) from anywhere
 - `vm2`:
-    - Allow incoming traffic on port 22 (SSH) from anywhere (or restrict to your IP for better security)
+    - Allow incoming traffic on port 22 (SSH) from anywhere (or restrict to your Public IP Address for better security)
     - Allow incoming traffic on port 3307 (MySQL) from `vm1`'s private IP address
 
 Make sure to review and adjust these settings in the DigitalOcean Control Panel to match the UFW rules we set up on the VMs.
