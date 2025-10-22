@@ -115,12 +115,18 @@ useradd -m -s /bin/bash appuser
 This creates a user named `appuser` with a home directory (the`-m` option) and sets the default shell to `/bin/bash` (the `-s` option). You will be prompted to set a password and provide some optional information.
 
 ### Adding SSH access for the new user
+Create the `.ssh` in the new user's home directory and set the correct permissions:
+```bash
+mkdir /home/appuser/.ssh
+chmod 700 /home/appuser/.ssh
+```
+
 To allow the new user to access the VM via SSH, you need to copy your SSH public key to the new user's `~/.ssh/authorized_keys` file.
 
 Exit the SSH session and run the following command on your local machine:
 
 ```bash
-scp ~/.ssh/new-key-id_ed25519.pub root@<public-ip-of-your-vm>:/home/appuser/.ssh/
+scp ~/.ssh/id_ed25519.pub root@<public-ip-of-your-vm>:/home/appuser/.ssh/
 ```
 This copies over the public key file to the new user's `.ssh` directory. Replace `<public-ip-of-your-vm>` with the actual public IP address of your VM.
 
