@@ -118,6 +118,7 @@ This creates a user named `appuser` with a home directory (the`-m` option) and s
 Create the `.ssh` in the new user's home directory and set the correct permissions:
 ```bash
 mkdir /home/appuser/.ssh
+sudo chown -R appuser:appuser /home/appuser/.ssh
 chmod 700 /home/appuser/.ssh
 ```
 
