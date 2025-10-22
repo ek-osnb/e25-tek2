@@ -112,7 +112,7 @@ To add a new user, use the `useradd` command:
 useradd -m -s /bin/bash appuser
 ```
 
-This creates a user named `appuser` with a home directory (the`-m` option) and sets the default shell to `/bin/bash` (the `-s` option). You will be prompted to set a password and provide some optional information.
+This creates a user named `appuser` with a home directory (the`-m` option) and sets the default shell to `/bin/bash` (the `-s` option).
 
 ### Adding SSH access for the new user
 Create the `.ssh` in the new user's home directory and set the correct permissions:
