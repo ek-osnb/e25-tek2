@@ -138,12 +138,12 @@ Then, connect back to your VM as `root` and add the public key to the `authorize
 ```bash
 ssh root@<public-ip-of-your-vm>
 cd /home/appuser/.ssh
-cat new-key-id_ed25519.pub > authorized_keys
+cat id_ed25519.pub > authorized_keys
 ```
 Set the correct permissions for the `.ssh` directory and `authorized_keys` file:
 
 ```bash
-chown appuser:appuser /home/appuser/.ssh
+chown -R appuser:appuser /home/appuser/.ssh
 chmod 700 /home/appuser/.ssh
 chmod 600 /home/appuser/.ssh/authorized_keys
 ```
@@ -152,7 +152,7 @@ This changes the ownership of the `.ssh` directory to `appuser` and sets the app
 You can now delete the copied public key file:
 
 ```bash
-rm new-key-id_ed25519.pub
+rm id_ed25519.pub
 ```
 
 ### Granting sudo privileges
