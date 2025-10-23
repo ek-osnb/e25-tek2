@@ -21,6 +21,7 @@ Once connected to your VM, the first step in any Linux administration task is to
 apt update
 apt upgrade -y
 ```
+**If you see prompts during the upgrade process, you can usually accept the defaults by pressing `Enter`.**
 
 `apt update` refreshes the package list, and `apt upgrade -y` upgrades all installed packages to their latest versions. The `-y` flag automatically confirms the upgrade. 
 
@@ -45,6 +46,8 @@ If it's active you should see a message indicating that the service is running:
    Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
    Active: active (running) since Mon 2025-10-10 12:34:56 UTC; 1min 30s ago
 ```
+
+To exit the status press `q`.
 
 If it's not running, you can start it with:
 
@@ -118,13 +121,11 @@ This creates a user named `appuser` with a home directory (the`-m` option) and s
 Create the `.ssh` in the new user's home directory and set the correct permissions:
 ```bash
 mkdir /home/appuser/.ssh
-sudo chown -R appuser:appuser /home/appuser/.ssh
-chmod 700 /home/appuser/.ssh
 ```
 
 To allow the new user to access the VM via SSH, you need to copy your SSH public key to the new user's `~/.ssh/authorized_keys` file.
 
-Exit the SSH session and run the following command on your local machine:
+**Exit the SSH session and run the following command on your local machine:**
 
 ```bash
 scp ~/.ssh/id_ed25519.pub root@<public-ip-of-your-vm>:/home/appuser/.ssh/
@@ -189,7 +190,11 @@ It should output `appuser` for the first command and `root` for the second comma
 
 ## Step 6: Writing a bash script for automation
 
-The steps we performed above can be automated using a bash script. Create a new file called `setup.sh` on VM2:
+The steps we performed above can be automated using a bash script. 
+
+Exit the SSH session and connect to your `vm2` as `root`:
+
+Create a new file called `setup.sh` on VM2:
 
 ```bash
 nano setup.sh
@@ -235,4 +240,4 @@ Run the script as root:
 ./setup.sh
 ```
 
-The only thing left to do is to add your SSH public key to the new user's `authorized_keys` file as shown in Step 5.
+**The only thing left to do is to add your SSH public key to the new user's `authorized_keys` file as shown in Step 5.**

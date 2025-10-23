@@ -26,7 +26,7 @@ echo \
 sudo apt-get update
 
 # Install the latest version
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 ```
 
 Then, transfer the script to both VMs and execute it:
@@ -71,7 +71,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "127.0.0.1:3307:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -88,7 +88,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "127.0.0.1:8090:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       db:
         condition: service_healthy
@@ -114,7 +114,7 @@ MYSQL_ROOT_PASSWORD=root
 MYSQL_DATABASE=mydb
 MYSQL_USER=user
 MYSQL_PASSWORD=secret
-SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/mydb
+SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/$MYSQL_DATABASE
 SPRING_DATASOURCE_USERNAME=user
 SPRING_DATASOURCE_PASSWORD=secret
 SPRING_PROFILES_ACTIVE=docker
@@ -140,8 +140,8 @@ You should see both `db` and `app` containers running.
 You can check if the application is running by running a `curl` command from `vm1`:
 
 ```bash
-curl http://localhost:8090/api/hello
-curl http://localhost:8090/api/books
+curl http://localhost:8080/api/hello
+curl http://localhost:8080/api/books
 ```
 
 You should see the responses from the application.
@@ -157,7 +157,7 @@ First we need to check the private IP address of `vm2`. You can find it by runni
 ```bash
 ip addr show eth1
 ```
-Typically, the private IP will be in the `10.110.x.x` range. Assume it is `10.110.0.3` (replace with your actual private IP of `vm2`).
+Typically, the private IP will be in the `10.110.x.x` range.
 
 On `vm2`, create a new `compose.yml` file with the following content:
 
@@ -172,7 +172,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "10.110.0.3:3307:3306"
+      - "${HOST_PRIVATE_IP}:${MYSQL_HOST_PORT}:3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -182,9 +182,18 @@ services:
 volumes:
   db_data:
 ```
-**Note** that we are binding the MySQL port to the private IP address of `vm2` - in the above file we have specified `10.110.0.3` as the host IP for the MySQL service.
 
-**REPLACE IT WITH YOUR ACTUAL PRIVATE IP.**
+Create a `.env` file on `vm2` with the following content:
+
+```bash
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=mydb
+MYSQL_USER=user
+MYSQL_PASSWORD=secret
+MYSQL_HOST_PORT=3306
+HOST_PRIVATE_IP=10.110.0.3
+```
+**Replace `10.110.0.3` with your actual private IP.**
 
 Run the Docker Compose setup on `vm2`:
 
@@ -208,7 +217,7 @@ Edit the `.env` file on `vm1` and update the `SPRING_DATASOURCE_URL` variable to
 
 ```bash
 DB_HOST=10.110.0.3
-DB_PORT=3307
+DB_PORT=3306
 DB_NAME=mydb
 SPRING_DATASOURCE_URL=jdbc:mysql://$DB_HOST:$DB_PORT/$DB_NAME
 SPRING_DATASOURCE_USERNAME=user
@@ -237,7 +246,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "127.0.0.1:8090:8080"
+      - "127.0.0.1:8080:8080"
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health >/dev/null 2>&1 || exit 1" ]
       interval: 5s
@@ -258,7 +267,7 @@ sudo docker ps
 ### Testing the connection
 You can test if the application on `vm1` can connect to the database on `vm2` by running the following `curl` commands from `vm1`:
 ```bash
-curl http://localhost:8090/api/books
+curl http://localhost:8080/api/books
 ```
 You should see the response from the application, indicating that it is successfully connected to the database on `vm2`.
 

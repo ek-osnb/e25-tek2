@@ -1,6 +1,6 @@
 # Updating firewall rules
 
-In this exercise, we will update the firewall rules on `vm1` to allow incoming HTTP traffic on port 80, so that we can access the Nginx reverse proxy from outside the VM. On `vm2`, we will only allow the MySQL port 3307 to be accessible from `vm1`. This will enhance the security of our setup by restricting access to the database server.
+In this exercise, we will update the firewall rules for both VMs (`vm1` and `vm2`) to enhance security. We will use UFW (Uncomplicated Firewall) to manage the firewall rules.
 
 ## Step 1: Setting up UFW on `vm1``
 

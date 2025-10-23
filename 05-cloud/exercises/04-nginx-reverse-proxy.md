@@ -22,11 +22,11 @@ The `systemctl enable nginx` command ensures that Nginx starts automatically on 
 
 Nginx needs to be configured to forward incoming requests to the application running on `vm1`.
 
-SSH into `vm1` and create a new Nginx configuration file for the reverse proxy:
+<!-- SSH into `vm1` and create a new Nginx configuration file for the reverse proxy:
 
 ```bash
 ssh appuser@<public-ip-of-vm1>
-```
+``` -->
 
 Create a new configuration file:
 
@@ -39,10 +39,10 @@ Add the following **server block** to the file:
 ```nginx
 server {
     listen 80;
-    server_name <public-ip-of-vm1>;
+    server_name _>;
 
     location / {
-        proxy_pass http://127.0.0.1:8090;
+        proxy_pass http://127.0.0.1:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -51,7 +51,7 @@ server {
 }
 ```
 
-This will listen on port 80 and forward requests to the application running on `localhost:8090`.
+This will listen on port 80 and forward requests to the application running on `localhost:8080`.
 
 ## Step 3: Enable the Nginx configuration
 
@@ -98,10 +98,13 @@ You should see the responses from the backend application. By default this uses 
 
 ## Step 6: Accessing from outside
 
-At the moment, the reverse proxy is only accessible from within `vm1`. This is because the firewall rules only allow incoming traffic on port 22 (SSH).
+Try accessing the application from your local machine using the public IP address of `vm1`:
 
-In the next exercise, we will update the firewall rules to allow incoming HTTP traffic on port 80, so that we can access the reverse proxy from outside `vm1`.
+```bash
+curl http://<public-ip-of-vm1>/api/hello
+curl http://<public-ip-of-vm1>/api/books
+```
 
 ## Summary
 
-In this exercise, we installed and configured Nginx as a reverse proxy on `vm1`. We set up Nginx to forward incoming HTTP requests on port 80 to the backend application running on `localhost:8090`. We also tested the configuration to ensure that the reverse proxy is functioning correctly.
+In this exercise, we installed and configured Nginx as a reverse proxy on `vm1`. We set up Nginx to forward incoming HTTP requests on port 80 to the backend application running on `localhost:8080`. We also tested the configuration to ensure that the reverse proxy is functioning correctly.
