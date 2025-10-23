@@ -49,7 +49,7 @@ section.lead h3 {
 - **Host name**: **`www.ek.dk`**
 A human-readable label that is assigned to a device connected to a network. Hostnames are easier to remember than IP addresses.
     - Domain: **`ek.dk`**
-    - Subdomain: **`www`**
+    - Subdomain or (hostname): **`www`**
     - Top-Level Domain (TLD): **`.dk`**
 
 - **IP Address**: **20.50.2.66**
@@ -232,6 +232,73 @@ A **resolver** is a DNS client that initiates the DNS query process on behalf of
 
 ---
 
+## Inserting records into DNS
+
+- DNS records are typically managed by the domain owner through a DNS hosting provider or registrar.
+- Changes to DNS records (like adding an A record or MX record) are made through a web interface or API provided by the DNS hosting service.
+- Once changes are made, they need to propagate through the DNS system, which can take time due to caching and TTL values.
+- The TTL (Time To Live) value determines how long a DNS record is cached by resolvers before they must query the authoritative server again for updated information.
+
+---
+
+# Exercise 01: Buying a domain and setting up DNS records
+
+---
+
+# DNS propagation time
+
+- DNS changes can take time to propagate throughout the internet due to caching at various levels (local DNS resolver, ISP, etc.).
+- The time it takes for DNS changes to propagate can vary based on the TTL (Time To Live) settings of the DNS records.
+- Lower TTL values can lead to faster propagation but may increase the load on DNS servers.
+- It's common to wait anywhere from a few minutes to 48 hours for DNS changes to fully propagate.
+
+**See a visualization of DNS propagation at https://dnschecker.org/**
+
+---
+
+# Adding TLS to a nginx server
+
+When hosting a website, it's important to secure the connection using TLS. This ensures that data transmitted between the user's browser and the web server is **encrypted**.
+- Encryption protects the data from being intercepted by malicious actors.
+
+- TLS also provides **authentication**, ensuring that users are connecting to the legitimate website and not an imposter.
+
+
+---
+
+# Practical Example: Using Let's Encrypt with Nginx
+
+1. On the VM hosting your Nginx server, install Certbot:
+    ```bash
+    sudo apt-get update
+    sudo apt-get install certbot python3-certbot-nginx
+    ```
+2. Obtain an TLS certificate for your domain:
+    ```bash
+    sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+    ```
+3. Follow the prompts to complete the certificate installation.
+4. Certbot will automatically configure Nginx to use the new TLS certificate.
+
+**Replace `yourdomain.com` with your actual domain name.**
+
+
+---
+
+## Using Digital Oceans DNS management
+**Why change DNS providers?**
+- Centralized management for multiple domains.
+- Easy to update records.
+- Reliable DNS hosting.
+- Digital Ocean exposes a simple UI and **REST API** for managing DNS records.
+- It's free to use if you have a Digital Ocean account.
+
+---
+
+# Exercise 02: Setting up TLS-certficates
+
+---
+
 ## DNS lookup tools
 
 **MacOS/Linux:**
@@ -353,23 +420,7 @@ When using `dig +trace`, you can see the entire resolution path from the root se
 
 ---
 
-## Exercise: DNS Lookup
-
-1. Use **`nslookup`** to find the IP address of `ek.dk`.
-2. Use **`dig`** to perform a DNS query for `ek.dk` and try different query types (A, AAAA, MX, etc.).
-3. Use **`dig +trace ek.dk`** to see the full resolution path from the root servers down to the authoritative server.
-    - Which servers were contacted?
-    - Identify the root, TLD and authoritative servers.
-    - Do it repeatedly what happens to the results?
-
----
-
-## Inserting records into DNS
-
-- DNS records are typically managed by the domain owner through a DNS hosting provider or registrar.
-- Changes to DNS records (like adding an A record or MX record) are made through a web interface or API provided by the DNS hosting service.
-- Once changes are made, they need to propagate through the DNS system, which can take time due to caching and TTL values.
-- The TTL (Time To Live) value determines how long a DNS record is cached by resolvers before they must query the authoritative server again for updated information.
+## Exercise 03: DNS Lookup
 
 ---
 
@@ -378,78 +429,6 @@ When using `dig +trace`, you can see the entire resolution path from the root se
 - **DNSSEC (DNS Security Extensions)**: A suite of extensions that add a layer of security to DNS by enabling DNS responses to be verified for authenticity.
 - **Privacy Concerns**: DNS queries can reveal browsing habits; using encrypted DNS (like DNS over HTTPS or DNS over TLS) can help mitigate this.
 - **DDoS Attacks**: DNS servers can be targeted in Distributed Denial of Service attacks, overwhelming them with traffic and making them unavailable.
-
----
-
-# DEMO: Registering a domain and setting up DNS records
-- Register a domain through a registrar (simply.com, one.com, etc.).
-- Use the registrar's DNS management tools to add records:
-    - Add an A record to point `yourdomain.com` to your server's IP address.
-    - Add a CNAME record for `www.yourdomain.com` to point to `yourdomain.com`.
-- We need a web server to respond to HTTP requests.
-
----
-
-## Exercise: Setting up DNS records
-1. Register a domain name through a registrar (e.g., simply.com, one.com).
-2. Use the registrar's DNS management tools to add the following records:
-    - An A record to point `yourdomain.com` to a public IP address (you can use a placeholder IP if you don't have one).
-    - A CNAME record for `www.yourdomain.com` to point to `yourdomain.com`.
-3. Use `dig` or `nslookup` to verify that the records have been added correctly.
-
----
-
-# DNS propagation time
-
-- DNS changes can take time to propagate throughout the internet due to caching at various levels (local DNS resolver, ISP, etc.).
-- The time it takes for DNS changes to propagate can vary based on the TTL (Time To Live) settings of the DNS records.
-- Lower TTL values can lead to faster propagation but may increase the load on DNS servers.
-- It's common to wait anywhere from a few minutes to 48 hours for DNS changes to fully propagate.
-
-**See a visualization of DNS propagation at https://dnschecker.org/**
-
----
-
-# Adding TLS to a nginx server
-
-When hosting a website, it's important to secure the connection using SSL/TLS. This ensures that data transmitted between the user's browser and the web server is **encrypted**.
-- Encryption protects the data from being intercepted by malicious actors.
-
-- TLS also provides **authentication**, ensuring that users are connecting to the legitimate website and not an imposter.
-
-
----
-
-# Practical Example: Using Let's Encrypt with Nginx
-
-1. On the VM hosting your Nginx server, install Certbot:
-    ```bash
-    sudo apt-get update
-    sudo apt-get install certbot python3-certbot-nginx
-    ```
-2. Obtain an TLS certificate for your domain:
-    ```bash
-    sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
-    ```
-3. Follow the prompts to complete the certificate installation.
-4. Certbot will automatically configure Nginx to use the new TLS certificate.
-
-**Replace `yourdomain.com` with your actual domain name.**
-
-
----
-
-# Exercise: Setting up TLS with Let's Encrypt
-
----
-
-## Using Digital Oceans DNS management
-**Why change DNS providers?**
-- Centralized management for multiple domains.
-- Easy to update records.
-- Reliable DNS hosting.
-- Digital Ocean exposes a simple UI and **REST API** for managing DNS records.
-- It's free to use if you have a Digital Ocean account.
 
 ---
 
@@ -773,7 +752,7 @@ Additional: | Name: <ROOT>, Type: OPT,                    |
 - Open Wireshark and start a capture on your network interface (e.g., Wi-Fi).
 - Use a filter to display only DNS traffic: `dns`
 
-![alt text](image.png)
+![wireshark dns capture](assets/wireshark-dns-capture.png)
 
 
 ---
