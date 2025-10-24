@@ -152,7 +152,7 @@ server {
 
 # 2
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
     server_name your_domain.dk;
 
     ssl_certificate     /etc/letsencrypt/live/your_domain.dk/fullchain.pem;
