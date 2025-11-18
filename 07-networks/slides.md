@@ -1,13 +1,13 @@
 ---
 marp: true
-title: "Computer networks intro"
+title: "Computer networking intro"
 version: "1.0"
 paginate: true
 ---
 
 <!-- _class: lead -->
 
-# Computer networks introduction
+# Computer networking
 ### 3rd semester @ Erhvervsakademi København
 
 <style>
